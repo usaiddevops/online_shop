@@ -43,4 +43,3 @@ jobs:
             docker stop online_shop || true
             docker rm online_shop || true
             docker run -d -p 3000:3000 --name online_shop ${{ secrets.DOCKERHUB_USERNAME }}/online_shop:latest
-
