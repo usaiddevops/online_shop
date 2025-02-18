@@ -38,6 +38,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
+          passphrase: ${{ secrets.EC2_PASSPHRASE }}}
           script: |
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/online_shop:latest
             docker stop online_shop || true
