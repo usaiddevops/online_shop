@@ -26,10 +26,12 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/online_shop:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/online_shop:latest
+           echo "${{ secrets.EC2_KEY }}"
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+  
 
     steps:
       - name: Checkout Code
