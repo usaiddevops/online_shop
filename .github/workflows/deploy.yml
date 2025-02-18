@@ -39,12 +39,12 @@ jobs:
 
       - name: Set up SSH
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
-
+         mkdir -p ~/.ssh
+         echo "${{ secrets.EC2_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+         chmod 600 ~/.ssh/id_rsa
+         ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+         echo "StrictHostKeyChecking no" >> ~/.ssh/config
+        shell: bash
 
       - name: Deploy to EC2
         run: |
