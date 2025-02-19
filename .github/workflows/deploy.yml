@@ -21,7 +21,7 @@ jobs:
 
       - name: Deploy Application
         run: |
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -t ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd /path/to/your/application
             git pull origin main
             # Add commands to build and restart your application
