@@ -1,0 +1,57 @@
+global:
+  scrape_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - '34.202.235.31:9093'  # Alertmanager IP
+
+rule_files:
+  - "alert_rules.yml"
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['34.202.235.31:9090']  # Scrape Prometheus itself
+      
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['34.202.235.31:9100']
+        labels:
+          alias: 'e-mart-app'
+      # - targets: ['ip:9100']
+      #   labels:
+      #     alias: 'name'
+      # - targets: ['ip:9100']
+      #   labels:
+      #     alias: 'name'
+      # - targets: ['ip:9100']
+      #   labels:
+      #     alias: 'name'
+      # - targets: ['ip:9100']
+      #   labels:
+      #     alias: 'name'
+    relabel_configs:
+      - source_labels: [alias]
+        target_label: instance    # Relabel instance names based on alias
+
+  - job_name: 'web_URL_check'
+    metrics_path: /probe
+    params:
+      module: [http_2xx] # Look for a 2xx response
+    static_configs:
+      - targets:
+        - http://34.202.235.31/
+        # - https://www.xyz.com/
+        # - https://backofficeapi.xyz.com/
+        # - https://backoffice.xyz.com/
+        # - https://api.xyz.com/api
+        # - https://chat.xyz.com/health/status
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox_exporter:9115

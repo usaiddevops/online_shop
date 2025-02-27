@@ -1,0 +1,21 @@
+global:
+  resolve_timeout: 1m
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'example@gmailcom' #relace with your sender mail 
+  smtp_auth_username: 'example@gmailcom'
+  smtp_auth_password: 'app-password'  # Replace with your Gmail App Password
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 30s
+  repeat_interval: 1m
+  receiver: 'email-receiver'
+
+receivers:
+- name: 'email-receiver'
+  email_configs:
+  - to: 'example@gmailcom'
+    send_resolved: true
+  - to: 'example@gmailcom'
+    send_resolved: true

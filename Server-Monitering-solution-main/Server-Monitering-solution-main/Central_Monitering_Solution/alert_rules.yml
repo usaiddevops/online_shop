@@ -1,0 +1,47 @@
+groups:
+  - name: alert_rules
+    rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} is down"
+          description: "The instance {{ $labels.instance }} has been down for more than 1 minute."
+
+      - alert: InstanceUnreachable
+        expr: probe_success == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} unreachable"
+          description: "Ping to {{ $labels.instance }} failed for more than 1 minute."
+
+      - alert: HighCPUUsage
+        expr: (100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage detected"
+          description: "The CPU utilization on instance {{ $labels.instance }} is above 80% for more than 5 minutes."
+
+      - alert: HighMemoryUsage
+        expr: (100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))) > 80
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Memory usage detected"
+          description: "The Memory utilization on instance {{ $labels.instance }} is above 80% for more than 5 minutes."
+
+      - alert: HighDiskUsage
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 25
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Disk Usage on {{ $labels.instance }}"
+          description: "{{ $labels.instance }} has less than 25% disk space available for more than 3 minutes."
